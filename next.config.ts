@@ -15,11 +15,21 @@
 
 // module.exports = nextConfig;
 
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   output: 'export',  // <=== Add this line
+//   images: {
+//     unoptimized: true, // <=== Highly recommended for GitHub Pages
+//   },
+// };
+
+// module.exports = nextConfig;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // <=== Add this line
+  output: 'export',      // This creates the /out folder GitHub is looking for
   images: {
-    unoptimized: true, // <=== Highly recommended for GitHub Pages
+    unoptimized: true,   // GitHub Pages doesn't support Next's default image optimization
   },
 };
 
