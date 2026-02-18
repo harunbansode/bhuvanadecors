@@ -1,16 +1,23 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',      // Required for GitHub Pages
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: 'export',      // This is the magic line for GitHub Pages
   images: {
-    unoptimized: true,   // Required for static export
-    domains: ["cdn.sanity.io"], // Keeps your Sanity images working
+    unoptimized: true,   // Required for static hosting
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
+    ],
   },
+  // These prevent small warnings from crashing your build
   eslint: {
-    ignoreDuringBuilds: true, // Prevents build failure from linting errors
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,  // Prevents build failure from type errors
+    ignoreBuildErrors: true,
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
