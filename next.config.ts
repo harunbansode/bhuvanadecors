@@ -75,10 +75,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // --- ADD THESE LINES TO BYPASS THE ERROR ---
-  eslint: {
-    ignoreDuringBuilds: true, // Skips linting checks
-  },
   typescript: {
     ignoreBuildErrors: true,  // Skips the 'Property width does not exist' error
   },
