@@ -61,7 +61,12 @@ export default function GalleryPage() {
             <p className="font-body text-dark leading-relaxed mb-6 opacity-80">{grid.description}</p>
             {grid.images?.[0]?.asset && (
               <div className="relative w-full aspect-[16/9] border border-accent overflow-hidden">
-                <Image src={urlFor(grid.images[0].asset).width(800).height(450).fit("crop").url()} alt="Featured" fill className="object-cover" />
+                <Image 
+                  src={(urlFor(grid.images[0].asset) as any).width(800).height(450).fit("crop").url()} 
+                  alt="Featured" 
+                  fill 
+                  className="object-cover" 
+                />
               </div>
             )}
           </div>
