@@ -65,7 +65,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',      // Required for GitHub Pages
+  // output: 'export',      // Required for GitHub Pages
   images: {
     unoptimized: true,   // Required for static hosting
     remotePatterns: [
@@ -78,7 +78,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,  // Skips the 'Property width does not exist' error
   },
-  // -------------------------------------------
 };
 
 export default nextConfig;
