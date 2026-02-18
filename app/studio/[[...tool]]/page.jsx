@@ -10,15 +10,6 @@
 import { NextStudio } from 'next-sanity/studio'
 import config from '../../../sanity.config'
 
-// Add these lines to fix the "missing generateStaticParams" error
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return [{ tool: [] }];
-}
-
-export const dynamic = 'force-static'
-
 export { metadata, viewport } from 'next-sanity/studio'
 
 export default function StudioPage() {
