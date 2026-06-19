@@ -43,13 +43,13 @@
 //   ],
 // });
 
-
 import { defineType, defineField } from "sanity";
 
 export default defineType({
   name: "gallery",
   title: "Gallery",
   type: "document",
+
   fields: [
     defineField({
       name: "service",
@@ -72,6 +72,7 @@ export default defineType({
       name: "title",
       title: "Title",
       type: "string",
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -91,7 +92,7 @@ export default defineType({
           fields: [
             {
               name: "details",
-              title: "Details",
+              title: "Image Description",
               type: "string",
             },
           ],
@@ -105,4 +106,17 @@ export default defineType({
       type: "number",
     }),
   ],
+
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "service",
+    },
+    prepare({ title, subtitle }) {
+      return {
+        title: title || "No Title",
+        subtitle: subtitle || "No Category",
+      };
+    },
+  },
 });
