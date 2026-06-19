@@ -14,6 +14,6 @@ import { createClient } from "next-sanity";
 export const sanityClient = createClient({
   projectId: "1h4axrsw",
   dataset: "production",
-  apiVersion: "2026-01-03",
+  apiVersion: "2023-01-01",
   useCdn: false, // true for cached content, false for fresh
 });
