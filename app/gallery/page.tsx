@@ -282,15 +282,119 @@
 
 
 
+
+
+
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import Image from "next/image";
+// import { getGallery } from "@/sanity/lib/gallery";
+
+// export default function GalleryPage() {
+//   const [galleryData, setGalleryData] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     getGallery().then((data) => {
+//       setGalleryData(data || []);
+//       setLoading(false);
+//     });
+//   }, []);
+
+//   if (loading)
+//     return (
+//       <div className="h-screen flex items-center justify-center">
+//         Loading...
+//       </div>
+//     );
+
+//   // GROUP BY SERVICE
+//   const grouped = galleryData.reduce((acc: any, item: any) => {
+//     const key = item.service || "other";
+//     if (!acc[key]) acc[key] = [];
+//     acc[key].push(item);
+//     return acc;
+//   }, {});
+
+//   return (
+//     <section className="w-full py-20 px-4 mt-12 md:px-8 space-y-32">
+
+//       {Object.entries(grouped).map(([service, items]: any) => (
+//         <div key={service} className="space-y-16">
+
+//           {/* SECTION TITLE */}
+//           <h2 className="text-4xl font-bold text-center uppercase">
+//             {service}
+//           </h2>
+
+//           {/* ITEMS */}
+//           {items.map((grid: any) => (
+//             <div
+//               key={grid._id}
+//               className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+//             >
+
+//               {/* IMAGES */}
+//               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+//                 {grid.images?.map((img: any) => (
+//                   <div
+//                     key={img._key}
+//                     className="relative aspect-square overflow-hidden bg-neutral-100"
+//                   >
+//                     {img.image && (
+//                       <Image
+//                         src={img.image}
+//                         alt="gallery"
+//                         fill
+//                         className="object-cover hover:scale-110 transition"
+//                       />
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+
+//               {/* TEXT */}
+//               <div>
+//                 <h3 className="text-3xl mb-2">{grid.title}</h3>
+//                 <p className="opacity-70">{grid.description}</p>
+//               </div>
+
+//             </div>
+//           ))}
+//         </div>
+//       ))}
+
+//     </section>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getGallery } from "@/sanity/lib/gallery";
 
 export default function GalleryPage() {
   const [galleryData, setGalleryData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [lightbox, setLightbox] = useState({
+    open: false,
+    gridIdx: 0,
+    imgIdx: 0,
+  });
 
   useEffect(() => {
     getGallery().then((data) => {
@@ -299,6 +403,26 @@ export default function GalleryPage() {
     });
   }, []);
 
+  const openLightbox = (gridIdx: number, imgIdx: number) => {
+    setLightbox({ open: true, gridIdx, imgIdx });
+  };
+
+  const nextImage = () => {
+    const images = galleryData[lightbox.gridIdx]?.images || [];
+    setLightbox((prev) => ({
+      ...prev,
+      imgIdx: (prev.imgIdx + 1) % images.length,
+    }));
+  };
+
+  const prevImage = () => {
+    const images = galleryData[lightbox.gridIdx]?.images || [];
+    setLightbox((prev) => ({
+      ...prev,
+      imgIdx: (prev.imgIdx - 1 + images.length) % images.length,
+    }));
+  };
+
   if (loading)
     return (
       <div className="h-screen flex items-center justify-center">
@@ -306,61 +430,117 @@ export default function GalleryPage() {
       </div>
     );
 
-  // GROUP BY SERVICE
-  const grouped = galleryData.reduce((acc: any, item: any) => {
-    const key = item.service || "other";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
-
   return (
     <section className="w-full py-20 px-4 mt-12 md:px-8 space-y-32">
 
-      {Object.entries(grouped).map(([service, items]: any) => (
-        <div key={service} className="space-y-16">
+      {galleryData.map((grid, gIdx) => (
+        <div
+          key={grid._id}
+          className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+        >
 
-          {/* SECTION TITLE */}
-          <h2 className="text-4xl font-bold text-center uppercase">
-            {service}
-          </h2>
+          {/* IMAGE GRID */}
+          <div className={`${gIdx % 2 !== 0 ? "lg:order-2" : ""}`}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
 
-          {/* ITEMS */}
-          {items.map((grid: any) => (
-            <div
-              key={grid._id}
-              className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            >
+              {grid.images?.map((img: any, iIdx: number) => (
+                <div
+                  key={iIdx}
+                  onClick={() => openLightbox(gIdx, iIdx)}
+                  className="relative aspect-square border overflow-hidden cursor-pointer group bg-neutral-100"
+                >
 
-              {/* IMAGES */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {grid.images?.map((img: any) => (
-                  <div
-                    key={img._key}
-                    className="relative aspect-square overflow-hidden bg-neutral-100"
-                  >
-                    {img.image && (
-                      <Image
-                        src={img.image}
-                        alt="gallery"
-                        fill
-                        className="object-cover hover:scale-110 transition"
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+                  {/* ✅ FIX: img.image */}
+                  {img.image && (
+                    <Image
+                      src={img.image}
+                      alt="Gallery image"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  )}
 
-              {/* TEXT */}
-              <div>
-                <h3 className="text-3xl mb-2">{grid.title}</h3>
-                <p className="opacity-70">{grid.description}</p>
-              </div>
+                </div>
+              ))}
 
             </div>
-          ))}
+          </div>
+
+          {/* CONTENT */}
+          <div className={`${gIdx % 2 !== 0 ? "lg:order-1" : ""}`}>
+            <h3 className="text-4xl uppercase mb-4">{grid.title}</h3>
+            <p className="opacity-80 mb-6">{grid.description}</p>
+
+            {/* FEATURED IMAGE */}
+            {grid.images?.[0]?.image && (
+              <div className="relative w-full aspect-[16/9] border overflow-hidden">
+                <Image
+                  src={grid.images[0].image}
+                  alt="Featured"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
+          </div>
+
         </div>
       ))}
+
+      {/* LIGHTBOX */}
+      {lightbox.open && galleryData[lightbox.gridIdx] && (
+        <div className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4">
+
+          <div className="relative max-w-5xl w-full flex flex-col items-center">
+
+            {/* CLOSE */}
+            <button
+              onClick={() =>
+                setLightbox((p) => ({ ...p, open: false }))
+              }
+              className="absolute -top-10 right-0 text-white text-4xl"
+            >
+              ×
+            </button>
+
+            {/* IMAGE */}
+            <div className="relative w-full h-[60vh]">
+              {galleryData[lightbox.gridIdx].images?.[lightbox.imgIdx]?.image && (
+                <Image
+                  src={
+                    galleryData[lightbox.gridIdx].images[lightbox.imgIdx].image
+                  }
+                  alt="Full view"
+                  fill
+                  className="object-contain"
+                />
+              )}
+            </div>
+
+            {/* COUNTER */}
+            <div className="mt-4 text-white text-xl">
+              {lightbox.imgIdx + 1} /{" "}
+              {galleryData[lightbox.gridIdx].images.length}
+            </div>
+
+            {/* NAV */}
+            <button
+              onClick={prevImage}
+              className="absolute left-0 text-white text-6xl top-1/2"
+            >
+              ‹
+            </button>
+
+            <button
+              onClick={nextImage}
+              className="absolute right-0 text-white text-6xl top-1/2"
+            >
+              ›
+            </button>
+
+          </div>
+        </div>
+      )}
 
     </section>
   );
