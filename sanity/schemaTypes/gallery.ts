@@ -1,22 +1,85 @@
+// import { defineType, defineField } from "sanity";
+
+// export default defineType({
+//   name: "gallery",
+//   title: "Gallery Category",
+//   type: "document",
+//   fields: [
+//     defineField({
+//       name: "title",
+//       title: "Category Name",
+//       type: "string",
+//       validation: Rule => Rule.required(),
+//     }),
+//     defineField({
+//       name: "description",
+//       title: "Category Description",
+//       type: "text",
+//       rows: 4,
+//     }),
+//     defineField({
+//       name: "images",
+//       title: "Images",
+//       type: "array",
+//       of: [
+//         {
+//           type: "image",
+//           options: { hotspot: true },
+//           fields: [
+//             {
+//               name: "details",
+//               title: "Image Description",
+//               type: "string",
+//             },
+//           ],
+//         },
+//       ],
+//     }),
+//     defineField({
+//       name: "order",
+//       title: "Display Order",
+//       type: "number",
+//     }),
+//   ],
+// });
+
+
 import { defineType, defineField } from "sanity";
 
 export default defineType({
   name: "gallery",
-  title: "Gallery Category",
+  title: "Gallery",
   type: "document",
   fields: [
     defineField({
-      name: "title",
-      title: "Category Name",
+      name: "service",
+      title: "Service Type",
       type: "string",
-      validation: Rule => Rule.required(),
+      options: {
+        list: [
+          { title: "Birthday & Sweet 16", value: "birthday" },
+          { title: "Baby Shower", value: "babyshower" },
+          { title: "Mehndi", value: "mehndi" },
+          { title: "Sangeet", value: "sangeet" },
+          { title: "Haldi", value: "haldi" },
+          { title: "Wedding Decor", value: "wedding" },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
     }),
+
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+    }),
+
     defineField({
       name: "description",
-      title: "Category Description",
+      title: "Description",
       type: "text",
-      rows: 4,
     }),
+
     defineField({
       name: "images",
       title: "Images",
@@ -28,16 +91,17 @@ export default defineType({
           fields: [
             {
               name: "details",
-              title: "Image Description",
+              title: "Details",
               type: "string",
             },
           ],
         },
       ],
     }),
+
     defineField({
       name: "order",
-      title: "Display Order",
+      title: "Order",
       type: "number",
     }),
   ],
